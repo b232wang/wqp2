@@ -33,6 +33,7 @@ public class View extends Board{
     DeadPanel dp;
     PassPanel pp;
     Wqp2 w2;
+    GenderPanel gp;
 
     public String waMsg;
     int state;
@@ -49,6 +50,7 @@ public class View extends Board{
         dp = new DeadPanel(0,0,h,w, colorArray[8]);
         wp = new WinPanel(0,0,h,w, colorArray[8]);
         pp = new PassPanel(0,0,h,w, colorArray[8]);
+        gp = new GenderPanel(0,0,h,w,colorArray[8]);
 
         this.w2 = w2;
     }
@@ -265,5 +267,21 @@ class PassPanel extends Board{
         g.setFont(new Font("TimesRoman", Font.BOLD, 20));
         g.setColor(Color.black);
         g.drawString("You Pass the all level!", x + w/2,  y + h /2);
+    }
+}
+
+class GenderPanel extends Board{
+    public String msg;
+
+    public GenderPanel(int x,int y,int h, int w, Color c){
+        super(x,y,h,w,c);
+    }
+
+    public void paint(Graphics g){
+        g.setColor(color);
+        g.fillRect(x,y,w,h);
+        g.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        g.setColor(Color.black);
+        g.drawString("choose M or F", x + w/2,  y + h /2);
     }
 }

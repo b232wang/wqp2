@@ -11,6 +11,7 @@ import java.io.*;
 public class Wqp2 extends JComponent{
 
     //0 start panel
+    //10 choose M/F
     //1 game
     //2 wrong ans
     //3 loop
@@ -21,7 +22,7 @@ public class Wqp2 extends JComponent{
     public View v;
     public Model m;
     public String dir= "wqp2/data/";
-    public String gender= "m/map";
+    public int gender = 0;
     public int level = 1;
     public int maxLevel = 2;
 
@@ -63,11 +64,11 @@ public class Wqp2 extends JComponent{
     }
 
     public void startGame(){
-        String fileName = dir + gender + Integer.toString(level) + ".txt";
-        m = new Model(v, fileName);
+        m = new Model(v, gender, level);
         state = 1;
         repaint();
     }
+
 
     public void handleKey(int k){
         int ans;
@@ -76,7 +77,19 @@ public class Wqp2 extends JComponent{
         }
         switch(state){
             case 0:
-                startGame();
+                state = 10;
+                break;
+            case 10:
+                switch(k){
+                    case KeyEvent.VK_M:
+                        gender = 0;
+                        startGame();
+                        break;
+                    case KeyEvent.VK_F:
+                        gender = 1;
+                        startGame();
+                        break;
+                }
                 break;
             case 1:
                 switch(k){
@@ -123,8 +136,7 @@ public class Wqp2 extends JComponent{
     }
 
     public void restart(){
-        String fileName = dir + gender + Integer.toString(level) + ".txt";
-        m = new Model(v,fileName);
+        m = new Model(v,gender,level);
         state = 1;
     }
 
@@ -135,8 +147,7 @@ public class Wqp2 extends JComponent{
             return;
         }
         level++;
-        String fileName = dir + gender + Integer.toString(level) + ".txt";
-        m = new Model(v, fileName);
+        m = new Model(v, gender, level);
         state = 1;
     }
 
@@ -147,6 +158,7 @@ public class Wqp2 extends JComponent{
         //3 break
         //4 did choose a right ans
         //5 win
+        if(m == null) return;
         int ans = m.gameState;
         switch(ans){
             case 0:

@@ -21,17 +21,26 @@ public class Model {
     public int gameState;
     public String msg;
     public String QuestionLine = "empty";
+    public String dir = "wqp2/data/";
 
     public View view;
 
     public Cell[][] board;
     public Player player;
 
-    public Model(View view, String fileName){
+    public Model(View view, int gender, int level){
         this.view = view;
         view.model = this;
         //initModel1("wqp2/data/testMap1.txt");
+        String path = "m/map";
+        if(gender == 1){
+            path = "f/map";
+        }
+        String fileName = dir + path + Integer.toString(level) + ".txt";
         initModel1(fileName);
+        if(gender == 1){
+            player.pic = "female.png";
+        }
         //only use on question
         randAns();
     }
@@ -288,7 +297,7 @@ class Player extends Cell {
     public Player(int x,int y, int color){
         super(x,y,color,'@');
         this.preCell = null;
-        pic = "female.png";
+        pic = "male.png";
     }
 
     public int passIt(int mx, int my){
