@@ -24,7 +24,7 @@ public class Wqp2 extends JComponent{
     public String dir= "wqp2/data/";
     public int gender = 0;
     public int level = 1;
-    public int maxLevel = 2;
+    public int maxLevel = 1;
 
     public Wqp2(){
         this.addKeyListener(new KeyAdapter(){
@@ -116,6 +116,9 @@ public class Wqp2 extends JComponent{
                         break;
                     case KeyEvent.VK_L:
                         m.move(1,0);
+                        break;
+                    case KeyEvent.VK_R:
+                        restart();
                         break;
                 }
                 break;

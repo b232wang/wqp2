@@ -11,6 +11,7 @@ public class Model {
     public int height;
     public int numRightAns;
     public int numAns;
+    public String[] ansArr;
 
     // 0 means no change
     // 1 dead wrong answer, infor store in msg
@@ -31,18 +32,70 @@ public class Model {
     public Model(View view, int gender, int level){
         this.view = view;
         view.model = this;
+        heForSheMode(gender,level);
         //initModel1("wqp2/data/testMap1.txt");
+    }
+
+    public void heForSheMode(int gender, int level){
         String path = "m/map";
+        String path2 = "m/ans";
+        String path3 = "m/que";
         if(gender == 1){
             path = "f/map";
+            path2 = "f/ans";
+            path3 = "f/que";
         }
         String fileName = dir + path + Integer.toString(level) + ".txt";
         initModel1(fileName);
+        String fileName2 = dir + path2 + Integer.toString(level) + ".txt";
+        readAns(fileName2);
         if(gender == 1){
             player.pic = "female.png";
         }
         //only use on question
+        String fileName3 = dir + path3 + Integer.toString(level) + ".png";
+        view.que.pic = fileName3;
+
+    }
+
+    public void readAns(String str){
         randAns();
+        BufferedReader br = null;
+        FileReader fr = null;
+
+        try{
+            fr = new FileReader(str);
+            br = new BufferedReader(fr);
+
+            String line;
+            br = new BufferedReader(new FileReader(str));
+
+            line = br.readLine();
+            int cidx = 0;
+            int widx = 3;
+            String[] arrS = line.split(";");
+            ansArr = new String[5];
+            for(int i = 0; i < height; i++){
+                for(int j = 0; j < width;j++){
+                    if(board[i][j] == null) continue;
+                    if(board[i][j].name == '+'){
+                        ansArr[board[i][j].id] = arrS[cidx];
+                        cidx++;
+                    }
+                    if(board[i][j].name == '*'){
+                        ansArr[board[i][j].id] = arrS[widx];
+                        board[i][j].msg = arrS[widx+2];
+                        widx++;
+                    }
+                }
+            }
+            view.que.ansArr = ansArr;
+            view.dp.ansArr = ansArr;
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -223,7 +276,8 @@ public class Model {
                     return;
                 }
                 if(code == -2){
-                    msg = ((WAns)(board[ny][nx])).msg;
+                    //msg = ((WAns)(board[ny][nx])).msg;
+                    msg = Integer.toString(board[ny][nx].id) + ";b;r;k;" + board[ny][nx].msg;
 
                     gameState = 1;
                     return;

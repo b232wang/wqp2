@@ -13,6 +13,10 @@ class Board{ int x,y,h,w;
     Color [] colorArray = {Color.pink, Color.red, Color.yellow, Color.blue, Color.black, Color.green, Color.cyan, Color.gray, Color.orange, Color.darkGray, Color.lightGray};
     int cellSize = 50;
     int cellEdge = 2;
+
+    public int id;
+    public String msg;
+
     public String picDir = "wqp2/data/picture/";
 
     public Board(int x,int y,int h, int w, Color c){
@@ -60,6 +64,9 @@ public class View extends Board{
             case 0:
                 wb.paint(g);
                 break;
+            case 10:
+                gp.paint(g);
+                break;
             case 1:
                 que.level = level;
                 que.paint(g);
@@ -67,14 +74,17 @@ public class View extends Board{
                 break;
             case 2:
                 dp.msg = waMsg;
+                dp.id = 2;
                 dp.paint(g);
                 break;
             case 3:
                 dp.msg = "You meet Dead Loop";
+                dp.id = 1;
                 dp.paint(g);
                 break;
             case 4:
                 dp.msg = "You meet a break";
+                dp.id = 0;
                 dp.paint(g);
                 break;
             case 5:
@@ -96,30 +106,60 @@ class WelcomeBoard extends Board{
     }
 
     public void paint(Graphics g){
-        g.setColor(Color.pink);
-        g.fillRect(x,y,w,h);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 13));
-        g.setColor(Color.black);
-        g.drawString("Welcome to WQP2",  x+w/2, y+ h/2);
-        g.drawString("press any KEY to start",  x+w/2, y+ h/2+20);
+        //g.setColor(Color.pink);
+        //g.fillRect(x,y,w,h);
+        //g.setFont(new Font("TimesRoman", Font.BOLD, 13));
+        //g.setColor(Color.black);
+        //g.drawString("Welcome to WQP2",  x+w/2, y+ h/2);
+        //g.drawString("press any KEY to start",  x+w/2, y+ h/2+20);
+
+
+        // insert image
+        BufferedImage image;
+        Image scaledImage ;
+        try {
+            String picName = picDir + "title.png";
+            image = ImageIO.read(new File(picName));
+            scaledImage = image.getScaledInstance(w, h, Image.SCALE_DEFAULT);
+            g.drawImage(scaledImage, x, y, null);
+        } catch (IOException ex) {}
     }
 }
 
 class Question extends Board{
+    public String[] ansArr = {"A", "b","c","d","e"};
+    public String pic = picDir + "title.png";
     int level;
     public Question(int x,int y ,int h,int w, Color c){
         super(x,y,h,w,c);
     }
 
     public void paint(Graphics g){
-        g.setColor(color);
-        g.fillRect(x,y,w,h);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 13));
+        //g.setColor(color);
+        //g.fillRect(x,y,w,h);
+
+        // insert image
+        BufferedImage image;
+        Image scaledImage ;
+        try {
+            String picName = pic;
+            image = ImageIO.read(new File(picName));
+            scaledImage = image.getScaledInstance(w, h, Image.SCALE_DEFAULT);
+            g.drawImage(scaledImage, x, y, null);
+        } catch (IOException ex) {}
+
+
+        g.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        g.setColor(Color.blue);
+        g.drawString("Level " + Integer.toString(level), x + 40,  y + h - 20);
+        g.setFont(new Font("TimesRoman", Font.BOLD, 18));
         g.setColor(Color.black);
-        g.drawString("questions ", x + w/2,  y + h /2);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 13));
-        g.setColor(Color.black);
-        g.drawString("Level " + Integer.toString(level), x + 20,  y + 20);
+        int tempEdge = 25;
+        g.drawString("A: "+ansArr[0] , x + w/2 +30,  y + tempEdge);
+        g.drawString("B: "+ansArr[1] , x + w/2 +30,  y + 2*tempEdge);
+        g.drawString("C: "+ansArr[2] , x + w/2 +30,  y + 3*tempEdge);
+        g.drawString("D: "+ansArr[3] , x + w/2 +30,  y + 4*tempEdge);
+        g.drawString("E: "+ansArr[4] , x + w/2 +30,  y + 5*tempEdge);
     }
 
 }
@@ -162,10 +202,7 @@ class GameBoard extends Board{
 
     public void paint(Graphics g){
         Model model = v.model;
-        g.setColor(color);
-        g.fillRect(x,y,w,h);
         // insert image
-        //
         BufferedImage image;
         Image scaledImage ;
         try {
@@ -214,24 +251,57 @@ class GameBoard extends Board{
 }
 
 class DeadPanel extends Board{
-    public String msg;
+    public String[] ansArr = {"A", "b","c","d","e"};
 
     public DeadPanel(int x,int y,int h, int w, Color c){
         super(x,y,h,w,c);
     }
 
     public void paint(Graphics g){
-        g.setColor(color);
-        g.fillRect(x,y,w,h);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 20));
-        g.setColor(Color.black);
-        g.drawString("You Dead!", x + w/2,  y + h /2);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 13));
-        g.setColor(Color.black);
-        g.drawString(msg, x + w/2,  y + h /2 + 40);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 13));
-        g.setColor(Color.black);
-        g.drawString("press any key to restart(except Q)", x + w/2,  y + h /2 + 80);
+        //g.setColor(color);
+        //g.fillRect(x,y,w,h);
+        //g.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        //g.setColor(Color.black);
+        //g.drawString("You Dead!", x + w/2,  y + h /2);
+        //g.setFont(new Font("TimesRoman", Font.BOLD, 13));
+        //g.setColor(Color.black);
+        //g.drawString(msg, x + w/2,  y + h /2 + 40);
+        //g.setFont(new Font("TimesRoman", Font.BOLD, 13));
+        //g.setColor(Color.black);
+        //g.drawString("press any key to restart(except Q)", x + w/2,  y + h /2 + 80);
+
+        // insert image
+        BufferedImage image;
+        Image scaledImage ;
+        try {
+            String picName = picDir + "lose_back.png";
+            if(id == 1){
+                picName = picDir + "loop_back.png";
+            }
+            image = ImageIO.read(new File(picName));
+            scaledImage = image.getScaledInstance(w, h, Image.SCALE_DEFAULT);
+            g.drawImage(scaledImage, x, y, null);
+            if(id == 2){
+                int theId = Integer.parseInt(msg.split(";b;r;k;")[0]);
+                String theMsg = msg.split(";b;r;k;")[1];
+
+                g.setFont(new Font("TimesRoman", Font.BOLD, 30));
+                g.setColor(Color.black);
+                g.drawString("Your answer is: " + ansArr[theId], x + 100,  y + 80);
+                g.setColor(Color.red);
+                g.drawString(theMsg, x + w/2 - 400,  y + h /2 );
+            }
+            if(id == 0){
+                g.setFont(new Font("TimesRoman", Font.BOLD, 30));
+                g.setColor(Color.red);
+                g.drawString("You hit the dagger!", x + w/2 - 400,  y + h /2 );
+            }
+            if(id == 1){
+                g.setFont(new Font("TimesRoman", Font.BOLD, 30));
+                g.setColor(Color.red);
+                g.drawString("You fall to an infinite loop!", x + w/2 - 400,  y + h /2 );
+            }
+        } catch (IOException ex) {}
     }
 }
 
@@ -243,14 +313,15 @@ class WinPanel extends Board{
     }
 
     public void paint(Graphics g){
-        g.setColor(color);
-        g.fillRect(x,y,w,h);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 20));
-        g.setColor(Color.black);
-        g.drawString("You Win!", x + w/2,  y + h /2);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 20));
-        g.setColor(Color.black);
-        g.drawString("Press anykey to next level", x + w/2,  y + h /2 + 20);
+        // insert image
+        BufferedImage image;
+        Image scaledImage ;
+        try {
+            String picName = picDir + "win_back.png";
+            image = ImageIO.read(new File(picName));
+            scaledImage = image.getScaledInstance(w, h, Image.SCALE_DEFAULT);
+            g.drawImage(scaledImage, x, y, null);
+        } catch (IOException ex) {}
     }
 }
 
@@ -262,11 +333,21 @@ class PassPanel extends Board{
     }
 
     public void paint(Graphics g){
-        g.setColor(color);
-        g.fillRect(x,y,w,h);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 20));
-        g.setColor(Color.black);
-        g.drawString("You Pass the all level!", x + w/2,  y + h /2);
+        //g.setColor(color);
+        //g.fillRect(x,y,w,h);
+        //g.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        //g.setColor(Color.black);
+        //g.drawString("You Pass the all level!", x + w/2,  y + h /2);
+
+        // insert image
+        BufferedImage image;
+        Image scaledImage ;
+        try {
+            String picName = picDir + "clear.png";
+            image = ImageIO.read(new File(picName));
+            scaledImage = image.getScaledInstance(w, h, Image.SCALE_DEFAULT);
+            g.drawImage(scaledImage, x, y, null);
+        } catch (IOException ex) {}
     }
 }
 
@@ -278,10 +359,20 @@ class GenderPanel extends Board{
     }
 
     public void paint(Graphics g){
-        g.setColor(color);
-        g.fillRect(x,y,w,h);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 20));
-        g.setColor(Color.black);
-        g.drawString("choose M or F", x + w/2,  y + h /2);
+        //g.setColor(color);
+        //g.fillRect(x,y,w,h);
+        //g.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        //g.setColor(Color.black);
+        //g.drawString("choose M or F", x + w/2,  y + h /2);
+
+        // insert image
+        BufferedImage image;
+        Image scaledImage ;
+        try {
+            String picName = picDir + "player.png";
+            image = ImageIO.read(new File(picName));
+            scaledImage = image.getScaledInstance(w, h, Image.SCALE_DEFAULT);
+            g.drawImage(scaledImage, x, y, null);
+        } catch (IOException ex) {}
     }
 }
