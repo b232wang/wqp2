@@ -151,7 +151,7 @@ class Question extends Board{
 
         g.setFont(new Font("TimesRoman", Font.BOLD, 20));
         g.setColor(Color.blue);
-        g.drawString("Level " + Integer.toString(level), x + 40,  y + h - 20);
+        g.drawString("Level " + Integer.toString(level), x + w/2 - 80,  y + h - 20);
         g.setFont(new Font("TimesRoman", Font.BOLD, 18));
         g.setColor(Color.black);
         int tempEdge = 25;
