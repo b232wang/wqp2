@@ -1,0 +1,4 @@
+rm wqp2/*.class
+javac wqp2/*.java
+java wqp2.Wqp2Main
+
