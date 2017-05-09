@@ -26,7 +26,12 @@ public class Wqp2 extends JComponent{
     public int level = 1;
     public int maxLevel = 1;
 
-    public Wqp2(){
+    public int h = 800;
+    public int w = 1200;
+
+    public Wqp2(int h,int w){
+        this.h = h;
+        this.w = w;
         this.addKeyListener(new KeyAdapter(){
             @Override
             public void keyPressed(KeyEvent e){
@@ -43,7 +48,7 @@ public class Wqp2 extends JComponent{
                 handleMouse(e);
             }
         });
-        v = new View(800, 1200, this);
+        v = new View(h, w, this);
     }
 
     public void handleMouse(MouseEvent e){

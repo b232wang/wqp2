@@ -154,7 +154,7 @@ class Question extends Board{
         g.drawString("Level " + Integer.toString(level), x + w/2 - 80,  y + h - 20);
         g.setFont(new Font("TimesRoman", Font.BOLD, 18));
         g.setColor(Color.black);
-        int tempEdge = 25;
+        int tempEdge = h/6;
         g.drawString("A: "+ansArr[0] , x + w/2 +30,  y + tempEdge);
         g.drawString("B: "+ansArr[1] , x + w/2 +30,  y + 2*tempEdge);
         g.drawString("C: "+ansArr[2] , x + w/2 +30,  y + 3*tempEdge);
