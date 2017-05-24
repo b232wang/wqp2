@@ -220,7 +220,7 @@ class GameBoard extends Board{
         int sy = (h - cellSize * numY + cellEdge * (numY - 1)) / 2 + y;
         for(int i = 0; i < numY; i++){
             for(int j = 0;j < numX; j++){
-                if(model.board[i][j] == null){
+                if(model.board[i][j].pic == null){
                     continue;
                 }
                 Color co = colorArray[model.board[i][j].color];
