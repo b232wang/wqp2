@@ -1,0 +1,18 @@
+2017 May 23 晚（凌晨）
+2.0 第一次整改小节
+MVC初成型
+
+1， 还有一些bug没有解决
+
+2， 衔接还是有一丢丢生硬
+
+Model View Controller用了3种不同的state
+目前V和C公用一个State，M用自己的state
+
+是否能把MVC都整和用一个state
+
+state如何更有效的传输
+
+对于以后的开发，v会需要更多的m信息，如何有效的给予
+
+notify是否够用

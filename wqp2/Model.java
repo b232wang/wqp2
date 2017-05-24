@@ -10,13 +10,17 @@ public class Model {
     public int width;
     public int height;
     public int numberLeft;
-    public int numAns;
-    public String[] ansArr;
+
+    private Controller c;
+
+    public int level;
+    public int totLvl;
 
     // gmaeState present:
     // 0 game is going
     // 1 game lose (dead)
-    // 2 game win (dead)
+    // 2 game win
+    // 3 pass all level
     public int gameState;
 
     // deadState present:
@@ -29,38 +33,80 @@ public class Model {
     // mode present:
     // 0 normal mode
     public int mode;
+    public String modeName;
 
-    public String msg;
-    public String QuestionLine = "empty";
-    public String dir = "wqp2/data/";
-
-    public View view;
+    public String modeDir = "wqp2/data/";
 
     public Cell[][] board;
     public Player player;
 
-    public Model(View view, int gender, int level){
-        this.view = view;
-        view.model = this;
+    public Model(Controller c){
         mode = 0;
+        this.c = c;
+        modeName = "mode0";
         initMode();
-        initGame();
-        //heForSheMode(gender,level);
     }
+
+    public Model(Controller c, int mode, String modeName){
+        this.mode = mode;
+        this.modeName = modeName;
+        this.c = c;
+        initMode();
+    }
+
 
     public void initMode(){
-
+        switch(mode){
+            case 0:
+                modeDir = "wqp2/data/mode0/";
+                level = 0;
+                readInfo();
+                break;
+        }
     }
 
-    public void initGame(){
-
+    public void nextLevel(){
+        level++;
+        if(level >= totLvl){
+            gameState = 3;
+            viewNotify();
+            return;
+        }
+        initGame();
     }
 
-
-    public void initModel1(String fileName){
+    private void readInfo(){
         BufferedReader br = null;
         FileReader fr = null;
 
+        String fileName = modeDir+"info.txt";
+        try{
+            fr = new FileReader(fileName);
+            br = new BufferedReader(fr);
+
+            String line;
+            br = new BufferedReader(new FileReader(fileName));
+            line = br.readLine();
+
+            totLvl = Integer.parseInt(line);
+        }catch(Exception e){}
+    }
+
+    public void initGame(){
+        readMap(modeDir + "map" + Integer.toString(level) + ".txt");
+        notifyInit();
+        gameState = 0;
+        viewNotify();
+    }
+
+    public void notifyInit(){
+        c.notifyXY(width, height);
+    }
+
+
+    public void readMap(String fileName){
+        BufferedReader br = null;
+        FileReader fr = null;
 
         try{
             fr = new FileReader(fileName);
@@ -70,38 +116,34 @@ public class Model {
             br = new BufferedReader(new FileReader(fileName));
 
             line = br.readLine();
-            this.width = Integer.parseInt(line.split(" ")[0]);
-            this.height= Integer.parseInt(line.split(" ")[1]);
-            this.numberLeft= Integer.parseInt(line.split(" ")[2]);
-            this.numAns = numberLeft + Integer.parseInt(line.split(" ")[3]);
+            String[] strArr = line.split(" ");
+            this.width = Integer.parseInt(strArr[0]);
+            this.height= Integer.parseInt(strArr[1]);
+            this.numberLeft= Integer.parseInt(strArr[2]);
 
             board = new Cell[height][width];
             int i = 0;
             while ((line = br.readLine()) != null) {
                 int len = line.length();
                 for(int j = 0;j < width;j++){
-                    //char c = (char)(line[j]);
                     char c = line.charAt(j);
                     board[i][j] = genCell(c, i, j);
-                    //if(board[i][j] != null) {
-                    //}
                 }
                 i++;
             }
-            view.viewNotify();
 
-        }catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            try {
-                if (br != null)
-                    br.close();
-                if (fr != null)
-                    fr.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+        }catch (IOException e) {}
+    }
+
+    public void viewNotify(){
+        String[][] str2D = new String[height][width];
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                str2D[i][j] = board[i][j].pic;
             }
         }
+        c.viewNotify(str2D, gameState, deadState, level);
+
     }
 
     public Cell genCell(char c, int y, int x){
@@ -115,10 +157,10 @@ public class Model {
                 temp = new Wall(x,y,1);
                 break;
             case '+':
-                temp = new RAns(x,y,2);
+                temp = new Point(x,y,2);
                 break;
             case '*':
-                temp = new WAns(x,y,2);
+                temp = new Wheel(x,y,2);
                 break;
             case '1':
                 temp = new Monster(x,y,3,'1',0,1);
@@ -142,23 +184,27 @@ public class Model {
                 temp2.color = 8;
                 temp = (Cell)temp2;
                 break;
+            case '.':
+                temp = new Empty(x,y);
+                break;
         }
         return temp;
     }
 
-    public boolean moveTo(int nx,int ny){
+    public boolean moveTo(int nx,int ny, int mx, int my){
         int code = board[ny][nx].passIt(mx, my);
 
         if(code == -1){
             //dead with monster
+            System.out.println("test2");
             gameState = 1;
             deadState = 3;
-            //view.viewNotify();
             return false;
         }
         if(code == -2){
             //dead with wheel
 
+            System.out.println("test3");
             gameState = 1;
             deadState = 1;
             return false;
@@ -169,7 +215,7 @@ public class Model {
             getPoint();
             board[ny][nx] = new Empty(nx, ny);
             if(isWin()){
-                gameState = 5;
+                gameState = 2;
                 gameWin();
             }
         }
@@ -190,7 +236,7 @@ public class Model {
     }
 
     public boolean isWin(){
-         return numberLeft == 0;
+        return numberLeft == 0;
     }
 
     public void move(int mx, int my){
@@ -198,6 +244,7 @@ public class Model {
         int initY = player.y;
         int nx, ny;
         boolean rv = true;
+        int passTime = 0;
         while(rv){
             nx = player.x + mx;
             ny = player.y + my;
@@ -216,14 +263,20 @@ public class Model {
             }
 
             //add new
-            rv = moveTo(nx,ny);
+            rv = moveTo(nx, ny, mx, my);
 
             if(rv && player.x == initX && player.y == initY){
-                gameState = 1;
-                deadState = 2;
+                if( passTime == 3 ){
+                    System.out.println("test1");
+                    gameState = 1;
+                    deadState = 2;
+                    rv = false;
+                }else{
+                    passTime++;
+                }
             }
 
-            view.viewNotify();
+            viewNotify();
         }
     }
 
@@ -306,10 +359,11 @@ class Wall extends Cell {
     }
 }
 
-class RAns extends Cell {
+class Point extends Cell {
 
-    public RAns(int x,int y, int color){
+    public Point(int x,int y, int color){
         super(x,y,color,'+');
+        pic = "A.png";
     }
 
     public int passIt(int mx, int my){
@@ -317,10 +371,11 @@ class RAns extends Cell {
     }
 }
 
-class WAns extends Cell {
+class Wheel extends Cell {
 
-    public WAns(int x,int y, int color){
+    public Wheel(int x,int y, int color){
         super(x,y,color,'*');
+        pic = "B.png";
     }
 
     public int passIt(int mx, int my){
@@ -365,19 +420,19 @@ class Monster extends Cell{
 class GreenPoint extends Cell{
     int passAble = 1;
     char greenWall = '&';
-    String pic1 = "seed.png";
-    String pic2 = "tree.png";
+    String before = "seed.png";
+    String after = "tree.png";
 
     public GreenPoint (int x, int y, int color){
         super(x,y,color,'?');
-        pic = "seed.png";
+        pic = before;
     }
 
     public int passIt(int mx, int my){
         if(passAble == 1){
             passAble = 0;
             name = greenWall;
-            pic = pic2;
+            pic = after;
             return 1;
         }
         return 0;

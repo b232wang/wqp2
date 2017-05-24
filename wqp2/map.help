@@ -1,0 +1,13 @@
+@ player
+A wall
++ point
+* wheel
+1 gear up
+2 gear left
+3 gear right
+4 gear down
+? green point
+& green wall
+
+width height numberPoint
+
