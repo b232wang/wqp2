@@ -29,7 +29,6 @@ public class TieView extends View{
         wp = new WinPanel(0,0,h,w,Color.red);
         dp = new DeadPanel(0,0,h,w,Color.red);
         pp = new PassPanel(0,0,h,w,Color.red);
-
     }
 
     protected void paintComponent(Graphics g) {
@@ -43,6 +42,7 @@ public class TieView extends View{
             case 0:
                 gb.pic = pic;
                 gb.level = level;
+                System.out.println("repaint component");
                 gb.paint(g, widthNum, heightNum);
                 break;
             case 1:
@@ -54,10 +54,7 @@ public class TieView extends View{
             case 3:
                 pp.paint(g);
                 break;
-
         }
-
     }
-
 }
 

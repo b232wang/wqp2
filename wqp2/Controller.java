@@ -22,6 +22,10 @@ public class Controller{
 
         state = -1;
 
+
+    }
+
+    public void run(){
         try{
             JFrame frame = new JFrame();
             frame.setLayout(new GridLayout(1,1));
@@ -90,10 +94,10 @@ public class Controller{
             case 1:
                 m.initGame();
                 break;
-            case 5:
+            case 2:
                 m.nextLevel();
                 break;
-            case 6:
+            case 3:
                 System.exit(0);
         }
         v.repaint();

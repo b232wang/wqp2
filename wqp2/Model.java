@@ -194,8 +194,14 @@ public class Model {
     public boolean moveTo(int nx,int ny, int mx, int my){
         int code = board[ny][nx].passIt(mx, my);
 
+        System.out.println("moveto");
+
+        if(code == 0) return false;
+
         if(code == -1){
             //dead with monster
+            System.out.println(ny);
+            System.out.println(nx);
             System.out.println("test2");
             gameState = 1;
             deadState = 3;
@@ -214,10 +220,6 @@ public class Model {
             //got point
             getPoint();
             board[ny][nx] = new Empty(nx, ny);
-            if(isWin()){
-                gameState = 2;
-                gameWin();
-            }
         }
 
         int ox = player.x;
@@ -227,6 +229,12 @@ public class Model {
         board[oy][ox] = player.preCell;
         player.preCell = board[ny][nx];
         board[ny][nx] = player;
+
+        if(isWin()){
+            gameState = 2;
+            gameWin();
+            return false;
+        }
 
         return true;
     }
@@ -264,6 +272,11 @@ public class Model {
 
             //add new
             rv = moveTo(nx, ny, mx, my);
+            System.out.println("move x y");
+            System.out.println(player.y);
+            System.out.println(player.x);
+            System.out.println(ny);
+            System.out.println(nx);
 
             if(rv && player.x == initX && player.y == initY){
                 if( passTime == 3 ){
@@ -328,7 +341,7 @@ class Empty extends Cell {
     }
 
     public int passIt(int mx, int my){
-        return 0;
+        return 1;
     }
 }
 

@@ -44,5 +44,6 @@ public class View extends JComponent{
         this.state = state;
         this.deadState = deadState;
         this.level = level;
+        repaint();
     }
 }
