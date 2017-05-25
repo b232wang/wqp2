@@ -17,7 +17,7 @@ public class Board{ int x,y,h,w;
     public int id;
     public String msg;
 
-    public String picDir = "wqp2/data/picture/";
+    public String picDir = "bin/wqp2/data/picture/";
 
     public Board(int x,int y,int h, int w, Color c){
         this.x = x;

@@ -1,4 +1,4 @@
-rm wqp2/*.class
-javac wqp2/*.java
-java wqp2.Wqp2Main
+javac -d bin src/wqp2/*.java
+cp -r src/wqp2/data bin/wqp2
+java -classpath bin wqp2.Wqp2Main
 

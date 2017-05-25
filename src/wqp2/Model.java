@@ -35,7 +35,8 @@ public class Model {
     public int mode;
     public String modeName;
 
-    public String modeDir = "wqp2/data/";
+    public String dataPath= "bin/wqp2/data/";
+    public String modeDir ;
 
     public Cell[][] board;
     public Player player;
@@ -58,7 +59,7 @@ public class Model {
     public void initMode(){
         switch(mode){
             case 0:
-                modeDir = "wqp2/data/mode0/";
+                modeDir = dataPath + "mode0/";
                 level = 0;
                 readInfo();
                 break;

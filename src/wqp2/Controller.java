@@ -12,6 +12,8 @@ public class Controller{
     public View v;
     public Model m;
 
+    public String dataPath = "bin/wqp2/data/";
+
     public int state;
 
     public Controller(int h, int w){
@@ -19,6 +21,8 @@ public class Controller{
         this.w = w;
         v = new TieView(h, w, this);
         m = new Model(this);
+
+        m.dataPath = dataPath;
 
         state = -1;
 
